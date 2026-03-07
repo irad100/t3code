@@ -384,6 +384,18 @@ describe("composerDraftStore setModel", () => {
       "gpt-5.3-codex",
     );
   });
+
+  it("normalizes aliases against the selected provider", () => {
+    const store = useComposerDraftStore.getState();
+
+    store.setProvider(threadId, "claudeCode");
+    store.setModel(threadId, "sonnet");
+
+    expect(useComposerDraftStore.getState().draftsByThreadId[threadId]).toMatchObject({
+      provider: "claudeCode",
+      model: "claude-sonnet-4-6",
+    });
+  });
 });
 
 describe("composerDraftStore setProvider", () => {
@@ -403,6 +415,16 @@ describe("composerDraftStore setProvider", () => {
     store.setProvider(threadId, "codex");
 
     expect(useComposerDraftStore.getState().draftsByThreadId[threadId]?.provider).toBe("codex");
+  });
+
+  it("persists Claude Code provider selection", () => {
+    const store = useComposerDraftStore.getState();
+
+    store.setProvider(threadId, "claudeCode");
+
+    expect(useComposerDraftStore.getState().draftsByThreadId[threadId]?.provider).toBe(
+      "claudeCode",
+    );
   });
 
   it("removes empty provider-only draft when provider is reset", () => {

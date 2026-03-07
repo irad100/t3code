@@ -499,7 +499,8 @@ export default function ChatView({ threadId }: ChatViewProps) {
     selectedProvider,
     activeThread?.model ?? activeProject?.model ?? getDefaultModel(selectedProvider),
   );
-  const customModelsForSelectedProvider = settings.customCodexModels;
+  const customModelsForSelectedProvider =
+    selectedProvider === "claudeCode" ? settings.customClaudeModels : settings.customCodexModels;
   const selectedModel = useMemo(() => {
     const draftModel = composerDraft.model;
     if (!draftModel) {
@@ -2878,9 +2879,11 @@ export default function ChatView({ threadId }: ChatViewProps) {
         return;
       }
       setComposerDraftProvider(activeThread.id, provider);
+      const customModels =
+        provider === "claudeCode" ? settings.customClaudeModels : settings.customCodexModels;
       setComposerDraftModel(
         activeThread.id,
-        resolveAppModelSelection(provider, settings.customCodexModels, model),
+        resolveAppModelSelection(provider, customModels, model),
       );
       scheduleComposerFocus();
     },
@@ -2888,6 +2891,7 @@ export default function ChatView({ threadId }: ChatViewProps) {
       activeThread,
       lockedProvider,
       scheduleComposerFocus,
+      settings.customClaudeModels,
       setComposerDraftModel,
       setComposerDraftProvider,
       settings.customCodexModels,

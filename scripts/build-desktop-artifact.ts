@@ -457,9 +457,7 @@ const createBuildConfig = Effect.fn("createBuildConfig")(function* (
     },
   };
   const publishConfig = resolveGitHubPublishConfig();
-  if (publishConfig) {
-    buildConfig.publish = [publishConfig];
-  }
+  buildConfig.publish = publishConfig ? [publishConfig] : null;
 
   if (platform === "mac") {
     buildConfig.mac = {
